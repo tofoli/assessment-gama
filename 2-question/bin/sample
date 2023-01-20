@@ -1,0 +1,32 @@
+#!/usr/bin/env ruby
+
+require 'ostruct'
+require_relative '../lib/notifier'
+
+class Notification
+  attr_accessor :user, :invoice
+
+  def initialize(user, invoice)
+    self.user = user
+    self.invoice = invoice
+  end
+
+  def to_send
+    Notifier::Email.new(user.email, "Pedido #{invoice.number}", message).to_send
+    Notifier::Sms.new(user.phone, message).to_send
+    Notifier::Whatsapp.new(user.phone, message).to_send
+  end
+
+  private
+
+  def message
+    "Seu pedido #{invoice.number} foi confirmado"
+  end
+end
+
+
+user = OpenStruct.new(email: 'foo@bar.com', phone: '+5511988776655')
+invoice = OpenStruct.new(number: 123456)
+
+Notification.new(user, invoice).to_send
+
