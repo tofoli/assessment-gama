@@ -1,0 +1,38 @@
+#!/usr/bin/env ruby
+
+games = {
+  '1'=> { home: 'França', away:  'Argentina' },
+  '2'=> { home: 'Brasil', away:  'Mexico' },
+  '3' => { home: 'EUA', away:  'Inglaterra' }
+}
+
+events = %w[Gol Falta Escanteio Falta Penalt Impedimento]
+
+res = nil
+while res != 'sair'
+  puts 'Digita na caixa de texto "informar jogo" para ver os jogos em andamento'
+  res = gets.chomp
+
+  if res.strip.downcase == 'informar jogo'
+    puts 'Escolha um jogo para acompanhar:'
+
+    games.each do  |id, game|
+      puts "#{id} => #{game[:home]} vs #{game[:away]}"
+    end
+
+    game_id = gets.chomp
+
+    game = games[game_id.strip]
+
+    if game
+      puts "Acompanhando jogo #{game[:home]} vs #{game[:away]}"
+
+      10.times do
+        team = [true, false].sample ? :home : :away
+        puts "#{events[rand(events.size)]} do(a) #{game[team]}"
+
+        sleep 2
+      end
+    end
+  end
+end
