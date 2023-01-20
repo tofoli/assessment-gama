@@ -1,0 +1,30 @@
+#!/usr/bin/env ruby
+
+require 'ostruct'
+require_relative '../../2-question/lib/notifier'
+
+class Notification
+  attr_accessor :user
+
+  def initialize(user)
+    self.user = user
+  end
+
+  def to_send
+    Notifier::Email.new(user.email, 'Newsletter Gama', message).to_send
+    Notifier::Sms.new(user.phone, message).to_send
+    Notifier::Whatsapp.new(user.phone, message).to_send
+  end
+
+  private
+
+  def message
+    'Bem vindo a newsletter da gama'
+  end
+end
+
+
+user = OpenStruct.new(email: 'foo@bar.com', phone: '+5511988776655')
+
+Notification.new(user).to_send
+
