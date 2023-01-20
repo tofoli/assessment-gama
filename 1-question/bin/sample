@@ -4,5 +4,5 @@ require_relative '../lib/writer'
 
 data = [{ a: 1, b: 2 }, { a: 4, b: 5 }]
 
-puts Writer.write(data, Writer::Csv)
+puts Writer.write(data, Writer::Xml)
 puts Writer.write(data)

@@ -1,5 +1,6 @@
 require_relative 'writer/json'
 require_relative 'writer/csv'
+require_relative 'writer/xml'
 
 module Writer
   # @param data can array of hash
