@@ -1,0 +1,60 @@
+version: '3.3'
+
+services:
+  app:
+    image: app
+    build: .
+    restart: always
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    environment:
+      - RAILS_MAX_THREADS=5
+  app-migrations:
+    image: app
+    command:
+      - ./setup-db.sh
+    env_file:
+      - .env
+
+  job:
+    image: app
+    restart: always
+    command:
+      - sidekiq
+    env_file:
+      - .env
+
+  localstack:
+    image: localstack/localstack
+    ports:
+      - 4566:4566
+    volumes:
+      - ./localstack_bootstrap:/docker-entrypoint-initaws.d/
+    env_file:
+      - .env
+    environment:
+      - SERVICES=s3
+      - AWS_DEFAULT_OUTPUT=json
+      - DOCKER_HOST=unix:///var/run/docker.sock
+
+  redis:
+    image: redis:latest
+    ports:
+      - 6379:6379
+    volumes:
+      - redis-data:/data
+
+  postgres:
+    image: postgres:13.5-alpine
+    ports:
+      - 5432:5432
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_HOST_AUTH_METHOD: trust
+
+volumes:
+  redis-data:
+  postgres-data:
