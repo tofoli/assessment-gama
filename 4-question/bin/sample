@@ -1,0 +1,7 @@
+#!/usr/bin/env ruby
+
+require_relative '../action'
+
+Action.new('TIPO2').call
+Action.new('TIPO5').call
+
